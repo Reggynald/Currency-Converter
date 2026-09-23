@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Currency Converter</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Währungsrechner</title>
+    <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+<div class="card">
+    <div class="exchange-anim">
+        <div class="orbit">
+            <div class="coin euro">€</div>
+            <div class="coin dollar">$</div>
+        </div>
+    </div>
+    <h1>💱 Currency Converter</h1>
+    <form id="converter">
+        <label for="amount">Amount</label>
+        <input type="number" id="amount" placeholder="Betrag eingeben" step="0.01" min="0" required>
+        <div class="row">
+            <div>
+                <label for="from">From</label>
+                <select id="from"></select>
+            </div>
+            <div>
+                <label for="to">To</label>
+                <select id="to"></select>
+            </div>
+        </div>
+
+        <button type="submit">Convert</button>
+    </form>
+
+    <div id="result"></div>
+</div>
+
+<script>
+    const fromSelect = document.getElementById("from");
+    const toSelect = document.getElementById("to");
+    const resultDiv = document.getElementById("result");
+
+    // Währungsliste beim Laden der Seite von der API holen
+    async function loadCurrencies() {
+        const response = await fetch("https://api.frankfurter.dev/v1/currencies");
+        const currencies = await response.json(); // z.B. {"EUR":"Euro", "USD":"United States Dollar", ...}
+
+        // Kürzel alphabetisch sortiert ins Dropdown
+        Object.keys(currencies).sort().forEach(code => {
+            const label = `${code} – ${currencies[code]}`;
+            fromSelect.add(new Option(label, code));
+            toSelect.add(new Option(label, code));
+        });
+
+        fromSelect.value = "EUR";
+        toSelect.value = "USD";
+    }
+
+    loadCurrencies();
+
+    document.getElementById("converter").addEventListener("submit", async (event) => {
+        event.preventDefault();
+
+        const amount = document.getElementById("amount").value;
+        const from = fromSelect.value;
+        const to = toSelect.value;
+
+        try {
+            const response = await fetch(`/convert?from=${from}&to=${to}&amount=${amount}`);
+            const data = await response.json();
+
+            if (response.ok) {
+                resultDiv.className = "success";
+                resultDiv.innerHTML =
+                    `<div class="result-main">${data.amount} ${data.from} = ${data.result} ${data.to}</div>` +
+                    `<div class="result-sub">Kurs: 1 ${data.from} = ${data.rate} ${data.to}</div>`;
+            } else {
+                resultDiv.className = "error";
+                resultDiv.textContent = data.message || "Fehler bei der Umrechnung.";
+            }
+        } catch (e) {
+            resultDiv.className = "error";
+            resultDiv.textContent = "Server nicht erreichbar.";
+        }
+    });
+</script>
+</body>
+</html>

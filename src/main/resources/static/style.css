@@ -1,0 +1,147 @@
+:root {
+    --accent: #4f46e5;
+    --accent-hover: #4338ca;
+    --bg-card: #ffffff;
+    --text: #1e1b2e;
+    --text-muted: #6b7280;
+    --border: #9ca3af;
+}
+
+* { box-sizing: border-box; }
+
+body {
+    font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    min-height: 100vh;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    color: var(--text);
+}
+
+.card {
+    position: relative;
+    background: var(--bg-card);
+    padding: 44px 40px;
+    border-radius: 20px;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.25);
+    width: 100%;
+    max-width: 480px;
+}
+
+h1 {
+    font-size: 1.7rem;
+    font-weight: 700;
+    margin: 0 0 24px;
+    text-align: center;
+}
+
+label {
+    display: block;
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    margin: 16px 0 6px;
+    color: var(--text-muted);
+}
+
+input, select {
+    width: 100%;
+    padding: 12px 14px;
+    font-size: 1rem;
+    border: 1.5px solid var(--border);
+    border-radius: 10px;
+    background: #fff;
+    transition: border-color 0.15s, box-shadow 0.15s;
+}
+
+input:focus, select:focus {
+    outline: none;
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.15);
+}
+
+.row { display: flex; gap: 14px; }
+.row > div { flex: 1; }
+
+button {
+    width: 100%;
+    margin-top: 28px;
+    padding: 14px;
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: #fff;
+    background: var(--accent);
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: background 0.15s, transform 0.05s;
+}
+
+button:hover { background: var(--accent-hover); }
+button:active { transform: scale(0.98); }
+
+#result {
+    margin-top: 24px;
+    padding: 20px;
+    border-radius: 12px;
+    display: none;
+    animation: fadeIn 0.25s ease;
+}
+
+#result.success { background: #ecfdf5; color: #065f46; display: block; }
+#result.error   { background: #fef2f2; color: #991b1b; display: block; }
+
+.result-main { font-size: 1.4rem; font-weight: 700; }
+.result-sub  { font-size: 0.85rem; opacity: 0.75; margin-top: 6px; }
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(6px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+/* --- Währungswechsel-Animation (Ecke) --- */
+.exchange-anim {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    width: 46px;
+    height: 46px;
+    pointer-events: none;   /* Klicks gehen "durch", stört die Bedienung nicht */
+}
+
+.orbit {
+    position: absolute;
+    inset: 0;
+    animation: orbit-spin 6s linear infinite;
+}
+
+.coin {
+    position: absolute;
+    left: 12px;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: #fff;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    animation: coin-upright 6s linear infinite;
+}
+
+.coin.euro   { top: 0;    background: var(--accent); }
+.coin.dollar { bottom: 0; background: #10b981; }
+
+@keyframes orbit-spin {
+    to { transform: rotate(360deg); }
+}
+
+@keyframes coin-upright {
+    to { transform: rotate(-360deg); }
+}
